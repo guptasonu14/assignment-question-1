@@ -20,14 +20,30 @@ const Dashboard = () => {
   const [selectedOrderDetails, setSelectedOrderDetails] = useState({});
   const [selectedOrderTimeStamps, setSelectedOrderTimeStamps] = useState({});
 
+  const handleSearch = (searchText) => {
+    setSearchText(searchText);
+  };
+
+  const dataWithTimeStamps = mockData.results.map((data) => {
+    const timestamp = timestamps.results.reduce((d, ts) => {
+      if (ts["&id"] === data["&id"]) return (d = ts.timestamps);
+      else return d;
+    }, "");
+    data.timeStamps = timestamp;
+    return data;
+  });
+
   return (
     <div>
       <div className={styles.header}>
-        <HeaderTitle primaryTitle="Orders" secondaryTitle="6 orders" />
+      <HeaderTitle
+          primaryTitle="Orders"
+          secondaryTitle={`${mockData.results.length} orders`}
+        />
         <div className={styles.actionBox}>
           <Search
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
           />
           <Dropdown
             options={["GBP", "USD", "JPY", "EUR"]}
@@ -47,7 +63,13 @@ const Dashboard = () => {
             title="Selected Order Timestamps"
           />
         </div>
-        <List rows={mockData.results} />
+        <List
+          rows={dataWithTimeStamps}
+          currency={currency}
+          setSelectedOrderTimeStamps={setSelectedOrderTimeStamps}
+          setSelectedOrderDetails={setSelectedOrderDetails}
+          searchText={searchText}
+        />
       </div>
     </div>
   );

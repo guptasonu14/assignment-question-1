@@ -2,6 +2,7 @@
   background-color: #043463;
   border-radius: 1em;
   color: white;
+  flex-grow: 1;
 }
 
 .cell {
